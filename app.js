@@ -58,6 +58,27 @@ let sessions = [
 const sessionList = document.querySelector("#session-list");
 let editingSkillIndex = null;
 
+function formatDate(dateString) {
+    const date = new Date(dateString + "T00:00:00");
+
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+}
+
+const sessionForm = document.querySelector("#session-form");
+const showSessionFormButton = document.querySelector("#show-session-form");
+const cancelSessionButton = document.querySelector("#cancel-session");
+
+const sessionDateInput = document.querySelector("#session-date");
+const sessionTypeInput = document.querySelector("#session-type");
+const sessionDurationInput = document.querySelector("#session-duration");
+const durationUnitInput = document.querySelector("#duration-unit");
+const sessionSkillsInput = document.querySelector("#session-skills");
+const sessionNotesInput = document.querySelector("#session-notes");
+
 function renderSessions() {
     sessionList.innerHTML = "";
 
@@ -71,11 +92,11 @@ function renderSessions() {
     
 
         const sessionDate = document.createElement("p");
-        sessionDate.textContent = session.date;
+        sessionDate.textContent = formatDate(session.date);
         sessionDate.classList.add("session-date");
 
         const sessionDuration = document.createElement("p");
-        sessionDuration.textContent = session.duration;
+        sessionDuration.textContent = `${session.duration} min`;
         sessionDuration.classList.add("session-duration");
 
         const sessionMeta = document.createElement("div");
@@ -108,6 +129,34 @@ function renderSessions() {
 }
 
 renderSessions();
+
+function populateSkillOptions() {
+    sessionSkillsInput.innerHTML = "";
+
+    skills.forEach(function (skill) {
+        const option = document.createElement("option");
+
+        option.value = skill.name;
+        option.textContent = skill.name;
+
+        sessionSkillsInput.appendChild(option);
+    });
+}
+
+populateSkillOptions();
+
+
+showSessionFormButton.addEventListener("click", function () {
+    sessionForm.classList.add("visible");
+    showSessionFormButton.style.display = "none";
+});
+
+cancelSessionButton.addEventListener("click", function () {
+    sessionForm.reset();
+    sessionForm.classList.remove("visible");
+    showSessionFormButton.style.display = "block";
+});
+
 
 const skillForm = document.querySelector("#skill-form");
 const skillNameInput = document.querySelector("#skill-name");

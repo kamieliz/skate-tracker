@@ -271,6 +271,55 @@ button:hover {
     margin-right: 8px;
 }
 
+#session-form {
+    background-color: var(--surface-light);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 16px;
+    display: none;
+    gap: 16px;
+}
+
+#session-form.visible {
+    display: grid;
+}
+
+#session-form label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+#session-form input,
+#session-form select,
+#session-form textarea {
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+#show-session-form {
+    display: block;
+    margin: 20px 0 0 auto;
+}
+
+#cancel-session {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+.duration-input {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+}
+
+
 @media (max-width: 700px) {
     main {
         grid-template-columns: 1fr;

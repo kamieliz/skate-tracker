@@ -83,6 +83,59 @@
         <section class="card sessions">
          <h2>Recent Sessions</h2>
          <div id="session-list"></div>
+            <button type="button" id="show-session-form">+ Log Session</button>
+
+            <form id="session-form">
+
+                <div class="form-field">
+                <label for="session-date">Date</label>
+                <input type="date" id="session-date" required>
+                </div>
+
+                <div class="form-field">
+                <label for="session-type">Practice Type</label>
+                <select id="session-type">
+                    <option value="Skate Class">Skate Class</option>
+                    <option value="Roller Rink">Roller Rink</option>
+                    <option value="Home Practice">Home Practice</option>
+                    <option value="Outdoor Practice">Outdoor Practice</option>
+                </select>
+                </div>
+
+                <div class="form-field">
+                <label for="session-duration">Duration</label>
+
+                <div class="duration-input">
+                <input type="number" id="session-duration" min="1" step="0.5" required>
+
+                <select id="duration-unit">
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                </select>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="session-skills">Skills Practiced</label>
+                <select id="session-skills" multiple></select>
+            </div>
+
+           <div class="form-field">
+                <label for="session-notes">Notes</label>
+                <textarea
+                    id="session-notes"
+                    rows="4"
+                    placeholder="How did practice go?"> 
+                </textarea>
+          </div>
+
+        <div class="form-actions">
+            <button type="submit">Save Session</button>
+            <button type="button" id="cancel-session">Cancel</button>
+        </div>
+
+        </form>
+         </div>
       </section>
     </main>
 
