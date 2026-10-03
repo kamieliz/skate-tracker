@@ -37,7 +37,77 @@ let skills = [
 
 ];
 
+let sessions = [
+    {
+        date: "2026-10-01",
+        type: "Skate Class",
+        duration: 60,
+        skills: ["Transitions", "Backward Bubbles", "Crossovers"],
+        notes: "Worked on going backwards, crossovers and transitions"
+
+    },
+    {
+        date: "2026-09-30",
+        type: "Roller Rink",
+        duration: 45,
+        skills: ["Forward Skating", "Forward Bubbles"],
+        notes: "Just practicing my stride when going forward, building confidence and balance"
+    }
+]
+
+const sessionList = document.querySelector("#session-list");
 let editingSkillIndex = null;
+
+function renderSessions() {
+    sessionList.innerHTML = "";
+
+    sessions.forEach(function (session) {
+        const sessionCard = document.createElement("div");
+        sessionCard.classList.add("session-card");
+
+        const sessionType = document.createElement("h3");
+        sessionType.textContent = session.type;
+        sessionType.classList.add("session-type");
+    
+
+        const sessionDate = document.createElement("p");
+        sessionDate.textContent = session.date;
+        sessionDate.classList.add("session-date");
+
+        const sessionDuration = document.createElement("p");
+        sessionDuration.textContent = session.duration;
+        sessionDuration.classList.add("session-duration");
+
+        const sessionMeta = document.createElement("div");
+        sessionMeta.classList.add("session-meta");
+
+        const sessionSkills = document.createElement("p");
+        sessionSkills.textContent = `Practiced: ${session.skills.join(", ")};`
+        sessionSkills.classList.add("session-skills");
+
+        const sessionNotes = document.createElement("p");
+        sessionNotes.textContent = session.notes;
+        sessionNotes.classList.add("session-notes");
+
+
+        sessionMeta.appendChild(sessionDate);
+        sessionMeta.appendChild(sessionDuration);
+
+
+        sessionCard.appendChild(sessionType);
+        sessionCard.appendChild(sessionMeta);
+        sessionCard.appendChild(sessionSkills);
+        sessionCard.appendChild(sessionNotes);
+
+        sessionList.appendChild(sessionCard);
+        
+
+    });
+
+
+}
+
+renderSessions();
 
 const skillForm = document.querySelector("#skill-form");
 const skillNameInput = document.querySelector("#skill-name");
@@ -180,3 +250,5 @@ const practiceStatus = document.querySelector("#practice-status");
 startButton.addEventListener("click", function () {
     practiceStatus.textContent = "Practice in progress 🛼";
 });
+
+
