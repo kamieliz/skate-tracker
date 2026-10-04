@@ -57,6 +57,7 @@ let sessions = [
 
 const sessionList = document.querySelector("#session-list");
 let editingSkillIndex = null;
+let editingSessionIndex = null;
 
 let recommendedSkills = [];
 let practiceInProgress = false;
@@ -138,7 +139,7 @@ const weeklyMinutes = document.querySelector("#weekly-minutes");
 function renderSessions() {
     sessionList.innerHTML = "";
 
-    sessions.forEach(function (session) {
+    sessions.forEach(function (session, index) {
         const sessionCard = document.createElement("div");
         sessionCard.classList.add("session-card");
 
@@ -166,6 +167,38 @@ function renderSessions() {
         sessionNotes.textContent = session.notes;
         sessionNotes.classList.add("session-notes");
 
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("delete-button");
+
+        deleteButton.addEventListener("click", function (){
+            sessions.splice(index, 1);
+            
+            saveSessions();
+            renderSessions();
+            updateWeeklySummary();
+
+        })
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.classList.add("edit-button");
+        editButton.addEventListener("click", function () {
+            editingSessionIndex = index;
+
+            sessionDateInput.value = session.date;
+            sessionTypeInput.value = session.type;
+            sessionDurationInput.value = session.duration;
+            durationUnitInput.value = "minutes";
+            sessionNotesInput.value = session.notes;
+
+            sessionForm.classList.add("visible");
+            showSessionFormButton.style.display = "none";
+
+            Array.from(sessionSkillsInput.options).forEach(function (option) {
+                option.selected = session.skills.includes(option.value);
+            });
+        });
 
         sessionMeta.appendChild(sessionDate);
         sessionMeta.appendChild(sessionDuration);
@@ -175,6 +208,13 @@ function renderSessions() {
         sessionCard.appendChild(sessionMeta);
         sessionCard.appendChild(sessionSkills);
         sessionCard.appendChild(sessionNotes);
+
+        const sessionActions = document.createElement("div");
+        sessionActions.classList.add("skill-actions");
+
+        sessionActions.appendChild(editButton);
+        sessionActions.appendChild(deleteButton);
+        sessionCard.appendChild(sessionActions);
 
         sessionList.appendChild(sessionCard);
         
@@ -230,10 +270,18 @@ sessionForm.addEventListener("submit", function(event) {
         notes: notes
     };
 
-    sessions.push(newSession);
+    if (editingSessionIndex !== null) {
+        sessions[editingSessionIndex] = newSession;
+    } else {
+        sessions.push(newSession);
+    }
+
+    
     saveSessions();
     renderSessions();
     updateWeeklySummary();
+
+    editingSessionIndex = null;
 
     
     sessionForm.reset();
@@ -251,6 +299,8 @@ cancelSessionButton.addEventListener("click", function () {
     sessionForm.reset();
     sessionForm.classList.remove("visible");
     showSessionFormButton.style.display = "block";
+
+    editingSessionIndex = null;
 });
 
 function saveSessions() {
