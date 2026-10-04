@@ -379,6 +379,36 @@ button:hover {
     letter-spacing: 1px;
 }
 
+#practice-recommendations {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.practice-skill {
+    background-color: var(--surface-light);
+    border-left: 4px solid var(--accent-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.practice-skill h3 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+}
+
+.practice-skill p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
 
 
 

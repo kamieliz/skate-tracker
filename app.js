@@ -58,6 +58,9 @@ let sessions = [
 const sessionList = document.querySelector("#session-list");
 let editingSkillIndex = null;
 
+let recommendedSkills = [];
+let practiceInProgress = false;
+
 const savedSessions = localStorage.getItem("sessions");
 
 if (savedSessions) {
@@ -268,11 +271,23 @@ function getPracticeRecommendations() {
         return skill.status !== "Mastered";
     });
 
+     const statusPriority = {
+        Learning: 1,
+        Developing: 2,
+        Consistent: 3
+    };
+
     developingSkills.sort(function (a, b) {
+        const statusDifference = statusPriority[a.status] = statusPriority[b.status];
+
+        if (statusDifference !== 0) {
+            return statusDifference;
+        }
         return a.confidence - b.confidence;
     });
 
-    const recommendedSkills = developingSkills.slice(0, 3);
+
+    recommendedSkills = developingSkills.slice(0, 3);
 
     practiceRecommendations.innerHTML = "";
 
@@ -429,15 +444,30 @@ renderSkills();
 getPracticeRecommendations();
 
 const startButton = document.querySelector("#start-practice");
-
-console.log(startButton);
-startButton.addEventListener("click", function () {
-    console.log("Practice started!");
-});
-
 const practiceStatus = document.querySelector("#practice-status");
+
 startButton.addEventListener("click", function () {
-    practiceStatus.textContent = "Practice in progress 🛼";
+    if (practiceInProgress === false) {
+        practiceInProgress = true;
+
+        practiceStatus.textContent = "Practice in progress 🛼";
+        startButton.textContent = "Finish Practice";
+    } else {
+        practiceInProgress = false;
+
+        practiceStatus.textContent = "Nice work! Log your session.";
+        startButton.textContent = "Start Practice";
+
+        sessionForm.classList.add("visible");
+        showSessionFormButton.style.display = "none";
+
+        const today = new Date().toISOString().split("T")[0];
+        sessionDateInput.value = today;
+
+        Array.from(sessionSkillsInput.options).forEach(function (option) {
+            option.selected = recommendedSkills.some(function (skill) {
+                return skill.name === option.value;
+            });
+        });
+    }
 });
-
-
