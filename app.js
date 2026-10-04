@@ -92,6 +92,32 @@ function formatDuration(minutes) {
 
 }
 
+function updateWeeklySummary() {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - daysSinceMonday);
+
+    const thisWeeksSessions = sessions.filter(function(session) {
+        const sessionDate = new Date(session.date + "T00:00:00");
+
+        return sessionDate >= monday && sessionDate <= today;
+    });
+
+    const sessionCount = thisWeeksSessions.length;
+    weeklySessionCount.textContent = sessionCount;
+
+    const totalMinutes = thisWeeksSessions.reduce(function (total, session) {
+        return total + session.duration;
+    }, 0);
+
+    weeklyMinutes.textContent = formatDuration(totalMinutes);
+
+}
+
 const sessionForm = document.querySelector("#session-form");
 const showSessionFormButton = document.querySelector("#show-session-form");
 const cancelSessionButton = document.querySelector("#cancel-session");
@@ -102,6 +128,9 @@ const sessionDurationInput = document.querySelector("#session-duration");
 const durationUnitInput = document.querySelector("#duration-unit");
 const sessionSkillsInput = document.querySelector("#session-skills");
 const sessionNotesInput = document.querySelector("#session-notes");
+
+const weeklySessionCount = document.querySelector("#weekly-session-count");
+const weeklyMinutes = document.querySelector("#weekly-minutes");
 
 function renderSessions() {
     sessionList.innerHTML = "";
@@ -201,6 +230,7 @@ sessionForm.addEventListener("submit", function(event) {
     sessions.push(newSession);
     saveSessions();
     renderSessions();
+    updateWeeklySummary();
 
     
     sessionForm.reset();
@@ -226,6 +256,42 @@ function saveSessions() {
 
 renderSessions();
 
+updateWeeklySummary();
+
+
+const practiceRecommendations = document.querySelector(
+    "#practice-recommendations"
+);
+
+function getPracticeRecommendations() {
+    const developingSkills = skills.filter(function (skill) {
+        return skill.status !== "Mastered";
+    });
+
+    developingSkills.sort(function (a, b) {
+        return a.confidence - b.confidence;
+    });
+
+    const recommendedSkills = developingSkills.slice(0, 3);
+
+    practiceRecommendations.innerHTML = "";
+
+    recommendedSkills.forEach(function (skill) {
+        const recommendation = document.createElement("div");
+        recommendation.classList.add("practice-skill");
+
+        const skillName = document.createElement("h3");
+        skillName.textContent = skill.name;
+
+        const skillDetails = document.createElement("p");
+        skillDetails.textContent = `${skill.status} - Confidence ${skill.confidence}/5`;
+
+        recommendation.appendChild(skillName);
+        recommendation.appendChild(skillDetails);
+
+        practiceRecommendations.appendChild(recommendation);
+    });
+}
 
 const skillForm = document.querySelector("#skill-form");
 const skillNameInput = document.querySelector("#skill-name");
@@ -252,6 +318,8 @@ skillForm.addEventListener("submit", function (event) {
 
     saveSkills();
     renderSkills();
+    getPracticeRecommendations();
+
     skillForm.reset();
 
     editingSkillIndex = null;
@@ -320,6 +388,7 @@ function renderSkills() {
             skills.splice(index, 1);
             saveSkills();
             renderSkills();
+            getPracticeRecommendations();
         });
 
         const editButton = document.createElement("button");
@@ -356,6 +425,8 @@ function renderSkills() {
 }
 
 renderSkills();
+
+getPracticeRecommendations();
 
 const startButton = document.querySelector("#start-practice");
 

@@ -51,6 +51,11 @@ main {
     display: grid;
     gap: 20px;
     grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+            "weekly skills"
+            "practice skills"
+            "sessions sessions";
+    align-items: start;
 
 }
 
@@ -60,6 +65,7 @@ main {
     padding: 24px;
     border: 1px solid var(--border);
     border-radius: 18px;
+    align-self: start;
 }
 
 #skill-list {
@@ -319,9 +325,70 @@ button:hover {
     gap: 8px;
 }
 
+.weekly-heading h2 {
+    margin-top: 0;
+}
+
+.weekly-heading span {
+    font-size: 1.5rem;
+}
+
+.weekly-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.weekly-stat {
+    background-color: var(--surface-light);
+    padding: 18px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.weekly-summary {
+    grid-area: weekly;
+}
+
+.skills {
+    grid-area: skills;
+}
+
+.practice {
+    grid-area: practice;
+}
+
+.sessions {
+    grid-area: sessions;
+}
+
+.stat-number {
+    display: block;
+    color: var(--gold);
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+
 
 @media (max-width: 700px) {
     main {
         grid-template-columns: 1fr;
+        grid-template-areas:
+            "weekly"
+            "practice"
+            "skills"
+            "sessions";
     }
 }

@@ -15,13 +15,24 @@
     </header>
 
     <main>
+        
         <section class="card weekly-summary">
-            <h2>This Week</h2>
+            <div class="weekly-heading">
+                <h2>This Week</h2>
+            </div>
 
-            <p>3 practice sessions</p>
-            <p>105 minutes skated</p>
+            <div class="weekly-stats">
+                <div class="weekly-stat">
+                    <span id="weekly-session-count" class="stat-number">0</span>
+                    <span class="stat-label">Sessions</span>
+                </div>
+
+                <div class="weekly-stat">
+                    <span id="weekly-minutes" class="stat-number">0 MIN</span>
+                    <span class="stat-label">Skated</span>
+                </div>
+            </div>
         </section>
-
         <section class="card skills">
             <h2>My Skills</h2>
 
@@ -76,6 +87,8 @@
             <h2>Today's Practice</h2>
 
             <p id="practice-status">Ready to skate?</p>
+
+            <div id="practice-recommendations"></div>
 
              <button id="start-practice">Start Practice</button>
 
