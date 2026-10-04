@@ -58,6 +58,12 @@ let sessions = [
 const sessionList = document.querySelector("#session-list");
 let editingSkillIndex = null;
 
+const savedSessions = localStorage.getItem("sessions");
+
+if (savedSessions) {
+    sessions = JSON.parse(savedSessions);
+}
+
 function formatDate(dateString) {
     const date = new Date(dateString + "T00:00:00");
 
@@ -66,6 +72,24 @@ function formatDate(dateString) {
         day: "numeric",
         year: "numeric"
     });
+}
+
+function formatDuration(minutes) {
+
+    if (minutes < 60) {
+        return `${minutes} MIN`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    const hourLabel = hours === 1 ? "HR" : "HRS";
+
+    if (remainingMinutes === 0){
+        return `${hours} ${hourLabel}`;
+    } else {
+        return `${hours} ${hourLabel} ${remainingMinutes} MIN`;
+    }
+
 }
 
 const sessionForm = document.querySelector("#session-form");
@@ -96,7 +120,7 @@ function renderSessions() {
         sessionDate.classList.add("session-date");
 
         const sessionDuration = document.createElement("p");
-        sessionDuration.textContent = `${session.duration} min`;
+        sessionDuration.textContent = formatDuration(session.duration);
         sessionDuration.classList.add("session-duration");
 
         const sessionMeta = document.createElement("div");
@@ -128,7 +152,7 @@ function renderSessions() {
 
 }
 
-renderSessions();
+
 
 function populateSkillOptions() {
     sessionSkillsInput.innerHTML = "";
@@ -145,6 +169,45 @@ function populateSkillOptions() {
 
 populateSkillOptions();
 
+sessionForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const date = sessionDateInput.value;
+    const type = sessionTypeInput.value;
+
+    let duration = Number(sessionDurationInput.value);
+    const unit = durationUnitInput.value;
+
+    const selectedSkills = Array.from(sessionSkillsInput.selectedOptions).map(
+        function (option) {
+            return option.value;
+        }
+    )
+
+    const notes = sessionNotesInput.value;
+
+    if (unit === "hours") {
+        duration = duration * 60;
+    }
+
+    const newSession = {
+        date: date,
+        type: type,
+        duration: duration,
+        skills: selectedSkills,
+        notes: notes
+    };
+
+    sessions.push(newSession);
+    saveSessions();
+    renderSessions();
+
+    
+    sessionForm.reset();
+    sessionForm.classList.remove("visible");
+    showSessionFormButton.style.display = "block";
+
+});
 
 showSessionFormButton.addEventListener("click", function () {
     sessionForm.classList.add("visible");
@@ -156,6 +219,12 @@ cancelSessionButton.addEventListener("click", function () {
     sessionForm.classList.remove("visible");
     showSessionFormButton.style.display = "block";
 });
+
+function saveSessions() {
+    localStorage.setItem("sessions", JSON.stringify(sessions));
+}
+
+renderSessions();
 
 
 const skillForm = document.querySelector("#skill-form");
